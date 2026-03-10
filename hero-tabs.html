@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hero Tabs — Type Scale Demo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Reset ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #f0f0ee;
+      font-family: 'Pretendard', -apple-system, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 24px;
+    }
+
+    /* ── Navbar ── */
+    nav {
+      width: 100%;
+      max-width: 1100px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 0 24px;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 15px;
+      font-weight: 500;
+      color: #1a1a1a;
+    }
+
+    .nav-logo svg { width: 24px; height: 24px; }
+
+    .nav-links {
+      display: flex;
+      gap: 36px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 13px;
+      color: #666;
+      text-decoration: none;
+      letter-spacing: -0.01em;
+    }
+
+    /* ── Hero wrapper ── */
+    .hero-wrapper {
+      width: 100%;
+      max-width: 1100px;
+      border-radius: 16px;
+      overflow: hidden;
+      position: relative;
+      background: #111;
+    }
+
+    /* ── Background layers ── */
+    .bg-layer {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+      filter: blur(0px);
+      transform: scale(1);
+    }
+
+    .bg-layer.active {
+      opacity: 1;
+    }
+
+    .bg-layer.leaving {
+      opacity: 0;
+      filter: blur(8px);
+      transform: scale(1.04);
+      transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1),
+                  filter 0.7s cubic-bezier(0.4, 0, 0.2, 1),
+                  transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Gradient meshes per tab */
+    .bg-0 {
+      background:
+        radial-gradient(ellipse 70% 80% at 20% 50%, #e03030 0%, transparent 60%),
+        radial-gradient(ellipse 60% 70% at 80% 40%, #00d4d4 0%, transparent 55%),
+        radial-gradient(ellipse 80% 60% at 50% 80%, #7b1fa2 0%, transparent 70%),
+        #1a0a2e;
+    }
+
+    .bg-1 {
+      background:
+        radial-gradient(ellipse 65% 75% at 15% 55%, #37474f 0%, transparent 60%),
+        radial-gradient(ellipse 70% 65% at 75% 45%, #e65100 0%, transparent 55%),
+        radial-gradient(ellipse 55% 80% at 45% 20%, #b0bec5 0%, transparent 60%),
+        #0d1b2a;
+    }
+
+    .bg-2 {
+      background:
+        radial-gradient(ellipse 65% 80% at 15% 60%, #1a0080 0%, transparent 60%),
+        radial-gradient(ellipse 70% 65% at 80% 45%, #00e676 0%, transparent 55%),
+        radial-gradient(ellipse 60% 55% at 50% 90%, #4a148c 0%, transparent 65%),
+        #060d1a;
+    }
+
+    .bg-3 {
+      background:
+        radial-gradient(ellipse 70% 80% at 20% 65%, #bf8040 0%, transparent 60%),
+        radial-gradient(ellipse 65% 70% at 78% 40%, #0d47a1 0%, transparent 55%),
+        radial-gradient(ellipse 55% 60% at 50% 15%, #e8d5b0 0%, transparent 60%),
+        #0a0c1a;
+    }
+
+    /* ── Hero inner ── */
+    .hero-inner {
+      position: relative;
+      z-index: 2;
+      height: 480px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 36px 40px 0;
+    }
+
+    /* ── Top caption ── */
+    .hero-caption {
+      font-size: 14px; /* Body/Normal Small */
+      line-height: 20px;
+      letter-spacing: -0.014em;
+      color: rgba(255,255,255,0.7);
+      max-width: 260px;
+      font-weight: 400;
+    }
+
+    /* ── Content area (titles + descriptions) ── */
+    .content-area {
+      flex: 1;
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+      padding-bottom: 40px;
+    }
+
+    .content-slot {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding-bottom: 0;
+      pointer-events: none;
+    }
+
+    /* Enter animation */
+    @keyframes slideInUp {
+      from {
+        opacity: 0;
+        transform: translateY(40px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Exit animation */
+    @keyframes slideOutUp {
+      from {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      to {
+        opacity: 0;
+        transform: translateY(-32px);
+      }
+    }
+
+    .content-slot.entering .hero-title,
+    .content-slot.entering .hero-desc {
+      animation: slideInUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    .content-slot.entering .hero-desc {
+      animation-delay: 0.06s;
+    }
+
+    .content-slot.leaving .hero-title,
+    .content-slot.leaving .hero-desc {
+      animation: slideOutUp 0.45s cubic-bezier(0.4, 0, 1, 1) forwards;
+    }
+
+    .content-slot.leaving .hero-desc {
+      animation-delay: 0.03s;
+    }
+
+    .content-slot.idle {
+      opacity: 1;
+    }
+
+    .content-slot.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* ── Hero title — Display Large ── */
+    .hero-title {
+      font-size: 72px;
+      font-weight: 400;
+      line-height: 100px;
+      letter-spacing: -0.028em;
+      color: #fff;
+      max-width: 640px;
+      opacity: 0;
+    }
+
+    /* ── Hero description — Body/Normal Large ── */
+    .hero-desc {
+      font-size: 13px; /* Body/Normal Small */
+      line-height: 20px;
+      letter-spacing: -0.014em;
+      color: rgba(255,255,255,0.6);
+      max-width: 300px;
+      margin-top: 20px;
+      font-weight: 400;
+      opacity: 0;
+    }
+
+    /* right-aligned tabs */
+    .content-slot[data-pos="right"] .hero-title,
+    .content-slot[data-pos="right"] .hero-desc {
+      margin-left: auto;
+      text-align: right;
+    }
+
+    /* ── Tab bar ── */
+    .tab-bar {
+      position: relative;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .tab-btn {
+      position: relative;
+      z-index: 2;
+      padding: 16px 20px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 13px; /* Label Small */
+      line-height: 20px;
+      letter-spacing: -0.012em;
+      color: rgba(255,255,255,0.45);
+      text-align: center;
+      transition: color 0.3s ease;
+      white-space: nowrap;
+    }
+
+    .tab-btn.active {
+      color: #111;
+      font-weight: 500;
+    }
+
+    /* ── Sliding pill indicator ── */
+    .tab-indicator {
+      position: absolute;
+      top: 8px;
+      bottom: 8px;
+      background: #fff;
+      border-radius: 8px;
+      transition: left 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+                  width 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    /* ── Partner logos ── */
+    .partner-bar {
+      width: 100%;
+      max-width: 1100px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 24px 0 0;
+    }
+
+    .partner {
+      font-size: 13px;
+      font-weight: 600;
+      color: #999;
+      letter-spacing: 0.02em;
+    }
+
+    .partner span {
+      font-size: 11px;
+      vertical-align: super;
+    }
+
+    /* ── Progress bar ── */
+    .progress-track {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: rgba(255,255,255,0.08);
+      z-index: 10;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: rgba(255,255,255,0.3);
+      width: 0%;
+      transition: width linear;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Nav -->
+  <nav>
+    <div class="nav-logo">
+      <svg viewBox="0 0 24 24" fill="none">
+        <rect x="2" y="2" width="9" height="9" rx="1" fill="#333"/>
+        <rect x="13" y="2" width="9" height="9" rx="1" fill="#333"/>
+        <rect x="2" y="13" width="9" height="9" rx="1" fill="#333"/>
+        <rect x="13" y="13" width="9" height="9" rx="1" fill="#bbb"/>
+      </svg>
+      weaverly
+    </div>
+    <ul class="nav-links">
+      <li><a href="#">Products ↓</a></li>
+      <li><a href="#">Solutions ↓</a></li>
+      <li><a href="#">Why Weaverly</a></li>
+      <li><a href="#">Pricing</a></li>
+      <li><a href="#">Company</a></li>
+    </ul>
+  </nav>
+
+  <!-- Hero -->
+  <div class="hero-wrapper">
+
+    <!-- BG layers -->
+    <div class="bg-layer bg-0 active" data-index="0"></div>
+    <div class="bg-layer bg-1"        data-index="1"></div>
+    <div class="bg-layer bg-2"        data-index="2"></div>
+    <div class="bg-layer bg-3"        data-index="3"></div>
+
+    <!-- Progress -->
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+
+    <!-- Inner -->
+    <div class="hero-inner">
+      <!-- Caption -->
+      <p class="hero-caption">Weaverly enables the creation<br>and delivery of intelligence<br>that fuels innovation.</p>
+
+      <!-- Animated content -->
+      <div class="content-area">
+
+        <div class="content-slot idle" data-index="0" data-pos="left">
+          <h1 class="hero-title">Pixel<br>Streaming</h1>
+          <p class="hero-desc">Deliver services to users 40 times faster at a reduced cost, eliminating need for extensive resource and infrastructure overhead.</p>
+        </div>
+
+        <div class="content-slot hidden" data-index="1" data-pos="left">
+          <h1 class="hero-title">Machine<br>Learning &amp; AI</h1>
+          <p class="hero-desc">Weaverly Cloud enables you to train, finetune and deploy models up 40 times faster offering the scalability and cost-effectiveness you need.</p>
+        </div>
+
+        <div class="content-slot hidden" data-index="2" data-pos="right">
+          <h1 class="hero-title">Inference<br>Service</h1>
+          <p class="hero-desc">Provide superior inference, seamlessly scale across thousands of nodes to meet changing demands without being overwhelmed.</p>
+        </div>
+
+        <div class="content-slot hidden" data-index="3" data-pos="right">
+          <h1 class="hero-title">VFX<br>&amp; Rendering</h1>
+          <p class="hero-desc">Conductor on Weaverly delivers the performance flexibility to render more shots, reduce runtimes, and lower costs.</p>
+        </div>
+
+      </div>
+
+      <!-- Tab bar -->
+      <div class="tab-bar" id="tabBar">
+        <div class="tab-indicator" id="tabIndicator"></div>
+        <button class="tab-btn active" data-index="0">Pixel Streaming</button>
+        <button class="tab-btn"       data-index="1">Machine Learning &amp; AI</button>
+        <button class="tab-btn"       data-index="2">Inference Service</button>
+        <button class="tab-btn"       data-index="3">VFX &amp; Rendering</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Partners -->
+  <div class="partner-bar">
+    <div class="partner">AMD<span>⊕</span></div>
+    <div class="partner">EPIC GAMES</div>
+    <div class="partner">NVIDIA</div>
+    <div class="partner">intel</div>
+  </div>
+
+<script>
+  const DURATION = 3200; // ms per tab
+
+  let current = 0;
+  let animating = false;
+  let timer = null;
+  let progressTimer = null;
+
+  const tabs    = document.querySelectorAll('.tab-btn');
+  const slots   = document.querySelectorAll('.content-slot');
+  const bgs     = document.querySelectorAll('.bg-layer');
+  const indicator = document.getElementById('tabIndicator');
+  const tabBar    = document.getElementById('tabBar');
+  const progressFill = document.getElementById('progressFill');
+
+  // ── Position indicator ──
+  function positionIndicator(index) {
+    const btn = tabs[index];
+    const barRect = tabBar.getBoundingClientRect();
+    const btnRect = btn.getBoundingClientRect();
+    indicator.style.left  = (btnRect.left - barRect.left + 6) + 'px';
+    indicator.style.width = (btnRect.width - 12) + 'px';
+  }
+
+  // ── Init idle state (first slot visible without animation) ──
+  function initSlot(slot) {
+    slot.classList.remove('hidden', 'entering', 'leaving', 'idle');
+    slot.querySelectorAll('.hero-title, .hero-desc').forEach(el => {
+      el.style.animation = 'none';
+      el.style.opacity = '1';
+      el.style.transform = 'translateY(0)';
+    });
+    slot.classList.add('idle');
+  }
+
+  // ── Switch tab ──
+  function switchTo(next) {
+    if (next === current || animating) return;
+    animating = true;
+
+    const prevSlot = slots[current];
+    const nextSlot = slots[next];
+    const prevBg   = bgs[current];
+    const nextBg   = bgs[next];
+
+    // Update tabs
+    tabs[current].classList.remove('active');
+    tabs[next].classList.add('active');
+    positionIndicator(next);
+
+    // Background transition
+    prevBg.classList.remove('active');
+    prevBg.classList.add('leaving');
+    nextBg.classList.add('active');
+
+    // Content out
+    prevSlot.classList.remove('idle');
+    prevSlot.querySelectorAll('.hero-title, .hero-desc').forEach(el => {
+      el.style.animation = 'none';
+      el.style.opacity = '1';
+      el.style.transform = 'translateY(0)';
+    });
+    // Force reflow
+    void prevSlot.offsetWidth;
+    prevSlot.classList.add('leaving');
+    prevSlot.querySelectorAll('.hero-title, .hero-desc').forEach(el => {
+      el.style.animation = '';
+    });
+
+    // Content in — with slight delay
+    nextSlot.classList.remove('hidden');
+    nextSlot.querySelectorAll('.hero-title, .hero-desc').forEach(el => {
+      el.style.opacity = '0';
+      el.style.animation = 'none';
+      el.style.transform = 'translateY(40px)';
+    });
+    void nextSlot.offsetWidth;
+    nextSlot.classList.add('entering');
+    nextSlot.querySelectorAll('.hero-title, .hero-desc').forEach(el => {
+      el.style.animation = '';
+    });
+
+    current = next;
+
+    // Cleanup after animation
+    setTimeout(() => {
+      prevSlot.classList.remove('leaving');
+      prevSlot.classList.add('hidden');
+      prevSlot.querySelectorAll('.hero-title, .hero-desc').forEach(el => {
+        el.style.animation = 'none';
+        el.style.opacity = '0';
+        el.style.transform = '';
+      });
+
+      nextSlot.classList.remove('entering');
+      nextSlot.querySelectorAll('.hero-title, .hero-desc').forEach(el => {
+        el.style.animation = 'none';
+        el.style.opacity = '1';
+        el.style.transform = 'translateY(0)';
+      });
+      nextSlot.classList.add('idle');
+
+      prevBg.classList.remove('leaving');
+
+      animating = false;
+    }, 650);
+  }
+
+  // ── Progress bar ──
+  function startProgress() {
+    progressFill.style.transition = 'none';
+    progressFill.style.width = '0%';
+    void progressFill.offsetWidth;
+    progressFill.style.transition = `width ${DURATION}ms linear`;
+    progressFill.style.width = '100%';
+  }
+
+  // ── Auto-play ──
+  function scheduleNext() {
+    clearTimeout(timer);
+    startProgress();
+    timer = setTimeout(() => {
+      const next = (current + 1) % tabs.length;
+      switchTo(next);
+      scheduleNext();
+    }, DURATION);
+  }
+
+  // ── Tab click ──
+  tabs.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = parseInt(btn.dataset.index);
+      switchTo(idx);
+      clearTimeout(timer);
+      scheduleNext();
+    });
+  });
+
+  // ── Init ──
+  window.addEventListener('load', () => {
+    positionIndicator(0);
+    initSlot(slots[0]);
+    scheduleNext();
+  });
+
+  window.addEventListener('resize', () => {
+    positionIndicator(current);
+  });
+</script>
+</body>
+</html>

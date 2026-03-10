@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSS Visualization</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Pretendard:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --Radius_8: 8px;
+    --Line-Cool-Neutral-Solid-2: #DFE0E1;
+    --Secondary-Cool-Gray-0: #FFF;
+    --Spacing_4: 4px;
+    --Spacing_0: 0px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Pretendard', -apple-system, sans-serif;
+    background: #F3F4F6;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 48px 24px;
+  }
+
+  h1 {
+    font-size: 13px;
+    font-weight: 600;
+    color: #6B7280;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 40px;
+  }
+
+  .boxes-row {
+    display: flex;
+    gap: 48px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 48px;
+  }
+
+  .box-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .section-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    color: #9CA3AF;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 16px;
+    background: #E5E7EB;
+    padding: 4px 12px;
+    border-radius: 4px;
+  }
+
+  .property-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    max-width: 480px;
+    width: 100%;
+    margin-bottom: 20px;
+    justify-content: center;
+  }
+
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 10px;
+    border-radius: 5px;
+    font-size: 10.5px;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 500;
+  }
+
+  .tag-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .tag-flex { background: #DBEAFE; color: #1D4ED8; }
+  .tag-size { background: #FEF3C7; color: #92400E; }
+  .tag-border { background: #E0E7FF; color: #4338CA; }
+  .tag-bg { background: #D1FAE5; color: #065F46; }
+  .tag-shadow { background: #F3E8FF; color: #6B21A8; }
+  .tag-spacing { background: #FEE2E2; color: #991B1B; }
+
+  .stage {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 56px;
+    background:
+      repeating-conic-gradient(#E5E7EB 0% 25%, transparent 0% 50%) 0 0 / 16px 16px;
+    border-radius: 16px;
+    border: 1px solid #E5E7EB;
+    margin-bottom: 20px;
+    position: relative;
+  }
+
+  .dim-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .width-marker {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+
+  .width-marker-1 { width: 400px; }
+  .width-marker-2 { width: 160px; }
+
+  .width-line {
+    flex: 1;
+    height: 1px;
+    background: #3B82F6;
+  }
+
+  .width-label {
+    color: #3B82F6;
+    font-size: 10px;
+    font-weight: 600;
+    font-family: 'JetBrains Mono', monospace;
+    padding: 0 8px;
+    white-space: nowrap;
+  }
+
+  /* Box A */
+  .target-box-a {
+    display: flex;
+    width: 400px;
+    max-width: 600px;
+    flex-direction: column;
+    align-items: flex-start;
+
+    border-radius: var(--Radius_8, 8px);
+    border: 1px solid var(--Line-Cool-Neutral-Solid-2, #DFE0E1);
+    background: var(--Secondary-Cool-Gray-0, #FFF);
+
+    box-shadow:
+      0 8px 22px -4px rgba(0, 0, 0, 0.08),
+      0 13px 26px 4px rgba(0, 0, 0, 0.04),
+      0 10px 36px 5px rgba(0, 0, 0, 0.02);
+
+    min-height: 220px;
+  }
+
+  /* Box B */
+  .target-box-b {
+    display: flex;
+    width: 160px;
+    min-width: 160px;
+    padding: var(--Spacing_4, 4px);
+    align-items: flex-start;
+    gap: var(--Spacing_0, 0px);
+
+    background: #fff;
+    min-height: 160px;
+  }
+
+  .placeholder {
+    padding: 24px;
+    width: 100%;
+  }
+
+  .placeholder-sm {
+    padding: 12px;
+    width: 100%;
+  }
+
+  .placeholder-line {
+    height: 11px;
+    background: #F3F4F6;
+    border-radius: 6px;
+    margin-bottom: 10px;
+  }
+
+  .box-a-lines .placeholder-line:nth-child(1) { width: 55%; height: 14px; margin-bottom: 16px; }
+  .box-a-lines .placeholder-line:nth-child(2) { width: 90%; }
+  .box-a-lines .placeholder-line:nth-child(3) { width: 70%; }
+  .box-a-lines .placeholder-line:nth-child(4) { width: 82%; margin-bottom: 20px; }
+  .box-a-lines .placeholder-line:nth-child(5) { width: 45%; }
+  .box-a-lines .placeholder-line:nth-child(6) { width: 65%; }
+  .box-a-lines .placeholder-line:nth-child(7) { width: 30%; margin-bottom: 0; }
+
+  .box-b-lines .placeholder-line:nth-child(1) { width: 70%; height: 12px; margin-bottom: 12px; }
+  .box-b-lines .placeholder-line:nth-child(2) { width: 90%; }
+  .box-b-lines .placeholder-line:nth-child(3) { width: 50%; }
+  .box-b-lines .placeholder-line:nth-child(4) { width: 80%; margin-bottom: 0; }
+
+  .code-block {
+    background: #1E1E2E;
+    border-radius: 12px;
+    padding: 20px 24px;
+    max-width: 480px;
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  .code-block pre {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11.5px;
+    line-height: 1.7;
+    color: #CDD6F4;
+    white-space: pre;
+  }
+
+  .prop { color: #89B4FA; }
+  .val { color: #A6E3A1; }
+  .unit { color: #F9E2AF; }
+  .var-name { color: #CBA6F7; }
+  .fallback { color: #F38BA8; }
+  .comment { color: #6C7086; font-style: italic; }
+  .punct { color: #585B70; }
+
+  .padding-viz {
+    border: 1.5px dashed #F59E0B;
+    border-radius: 2px;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: 148px;
+  }
+
+  .padding-label {
+    position: absolute;
+    top: 2px;
+    left: 4px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: #F59E0B;
+    font-weight: 600;
+  }
+
+  .tag-text { background: #FFF7ED; color: #9A3412; }
+  .tag-interact { background: #ECFDF5; color: #065F46; }
+
+  /* Button states */
+  .btn-demo {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 44px;
+    padding: 0 24px;
+    border-radius: 8px;
+    font-family: 'Pretendard', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    gap: 8px;
+    white-space: nowrap;
+  }
+
+  .btn-primary {
+    background: #2563EB;
+    color: #fff;
+  }
+  .btn-primary:hover { background: #1D4ED8; }
+  .btn-primary:active { background: #1E40AF; transform: scale(0.97); }
+
+  .btn-secondary {
+    background: #F3F4F6;
+    color: #374151;
+    border: 1px solid #D1D5DB;
+  }
+  .btn-secondary:hover { background: #E5E7EB; }
+  .btn-secondary:active { background: #D1D5DB; transform: scale(0.97); }
+
+  .btn-outline {
+    background: transparent;
+    color: #2563EB;
+    border: 1.5px solid #2563EB;
+  }
+  .btn-outline:hover { background: #EFF6FF; }
+  .btn-outline:active { background: #DBEAFE; transform: scale(0.97); }
+
+  .btn-danger {
+    background: #DC2626;
+    color: #fff;
+  }
+  .btn-danger:hover { background: #B91C1C; }
+  .btn-danger:active { background: #991B1B; transform: scale(0.97); }
+
+  .btn-disabled {
+    background: #E5E7EB;
+    color: #9CA3AF;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  .btn-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: center;
+  }
+
+  .btn-row {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+
+  .state-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: #9CA3AF;
+    min-width: 60px;
+    text-align: right;
+  }
+
+  .btn-sizes-row {
+    display: flex;
+    gap: 12px;
+    align-items: flex-end;
+  }
+
+  .btn-sm {
+    height: 32px;
+    padding: 0 14px;
+    font-size: 13px;
+    border-radius: 6px;
+  }
+
+  .btn-md {
+    height: 44px;
+    padding: 0 24px;
+    font-size: 15px;
+  }
+
+  .btn-lg {
+    height: 52px;
+    padding: 0 32px;
+    font-size: 16px;
+    border-radius: 10px;
+  }
+</style>
+</head>
+<body>
+
+<h1>CSS Properties Visualization</h1>
+
+<div class="boxes-row">
+
+  <!-- Box A -->
+  <div class="box-section">
+    <div class="section-label">Box A — Card Container</div>
+
+    <div class="property-tags">
+      <span class="tag tag-flex"><span class="tag-dot" style="background:#3B82F6"></span>display: flex</span>
+      <span class="tag tag-flex"><span class="tag-dot" style="background:#3B82F6"></span>flex-direction: column</span>
+      <span class="tag tag-flex"><span class="tag-dot" style="background:#3B82F6"></span>align-items: flex-start</span>
+      <span class="tag tag-size"><span class="tag-dot" style="background:#D97706"></span>width: 400px</span>
+      <span class="tag tag-size"><span class="tag-dot" style="background:#D97706"></span>max-width: 600px</span>
+      <span class="tag tag-border"><span class="tag-dot" style="background:#6366F1"></span>border-radius: 8px</span>
+      <span class="tag tag-border"><span class="tag-dot" style="background:#6366F1"></span>border: 1px #DFE0E1</span>
+      <span class="tag tag-bg"><span class="tag-dot" style="background:#059669"></span>bg: #FFF</span>
+      <span class="tag tag-shadow"><span class="tag-dot" style="background:#8B5CF6"></span>box-shadow: 3-layer</span>
+    </div>
+
+    <div class="dim-wrapper">
+      <div class="width-marker width-marker-1">
+        <div class="width-line"></div>
+        <span class="width-label">400px</span>
+        <div class="width-line"></div>
+      </div>
+      <div class="stage">
+        <div class="target-box-a">
+          <div class="placeholder box-a-lines">
+            <div class="placeholder-line"></div>
+            <div class="placeholder-line"></div>
+            <div class="placeholder-line"></div>
+            <div class="placeholder-line"></div>
+            <div class="placeholder-line"></div>
+            <div class="placeholder-line"></div>
+            <div class="placeholder-line"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="code-block">
+<pre><span class="prop">display</span><span class="punct">:</span> <span class="val">flex</span><span class="punct">;</span>
+<span class="prop">width</span><span class="punct">:</span> <span class="val">400</span><span class="unit">px</span><span class="punct">;</span>  <span class="prop">max-width</span><span class="punct">:</span> <span class="val">600</span><span class="unit">px</span><span class="punct">;</span>
+<span class="prop">flex-direction</span><span class="punct">:</span> <span class="val">column</span><span class="punct">;</span>
+<span class="prop">align-items</span><span class="punct">:</span> <span class="val">flex-start</span><span class="punct">;</span>
+
+<span class="prop">border-radius</span><span class="punct">:</span> var(<span class="var-name">--Radius_8</span>, <span class="fallback">8px</span>)<span class="punct">;</span>
+<span class="prop">border</span><span class="punct">:</span> <span class="val">1px solid</span> var(<span class="var-name">--Line-Cool-Neutral-Solid-2</span>, <span class="fallback">#DFE0E1</span>)<span class="punct">;</span>
+<span class="prop">background</span><span class="punct">:</span> var(<span class="var-name">--Secondary-Cool-Gray-0</span>, <span class="fallback">#FFF</span>)<span class="punct">;</span>
+
+<span class="comment">/* DropShadow/Light/Down/4 */</span>
+<span class="prop">box-shadow</span><span class="punct">:</span>
+  <span class="val">0 8px 22px -4px</span>  <span class="fallback">rgba(0,0,0,0.08)</span><span class="punct">,</span>
+  <span class="val">0 13px 26px 4px</span>  <span class="fallback">rgba(0,0,0,0.04)</span><span class="punct">,</span>
+  <span class="val">0 10px 36px 5px</span>  <span class="fallback">rgba(0,0,0,0.02)</span><span class="punct">;</span></pre>
+    </div>
+  </div>
+
+  <!-- Box C — Button -->
+  <div class="box-section">
+    <div class="section-label">Box C — Button</div>
+
+    <div class="property-tags">
+      <span class="tag tag-flex"><span class="tag-dot" style="background:#3B82F6"></span>display: inline-flex</span>
+      <span class="tag tag-size"><span class="tag-dot" style="background:#D97706"></span>height: 44px</span>
+      <span class="tag tag-spacing"><span class="tag-dot" style="background:#DC2626"></span>padding: 0 24px</span>
+      <span class="tag tag-border"><span class="tag-dot" style="background:#6366F1"></span>border-radius: 8px</span>
+      <span class="tag tag-text"><span class="tag-dot" style="background:#EA580C"></span>font-weight: 600</span>
+      <span class="tag tag-interact"><span class="tag-dot" style="background:#059669"></span>transition: 0.15s</span>
+    </div>
+
+    <div class="dim-wrapper">
+      <div class="stage" style="padding: 40px 48px;">
+        <div class="btn-grid">
+          <div class="btn-row">
+            <span class="state-label">Primary</span>
+            <button class="btn-demo btn-primary">확인</button>
+          </div>
+          <div class="btn-row">
+            <span class="state-label">Secondary</span>
+            <button class="btn-demo btn-secondary">취소</button>
+          </div>
+          <div class="btn-row">
+            <span class="state-label">Outline</span>
+            <button class="btn-demo btn-outline">더보기</button>
+          </div>
+          <div class="btn-row">
+            <span class="state-label">Danger</span>
+            <button class="btn-demo btn-danger">삭제</button>
+          </div>
+          <div class="btn-row">
+            <span class="state-label">Disabled</span>
+            <button class="btn-demo btn-disabled" disabled>비활성</button>
+          </div>
+          <hr style="width:100%; border:none; border-top:1px solid #E5E7EB; margin: 4px 0;">
+          <div class="btn-sizes-row">
+            <button class="btn-demo btn-primary btn-sm">Small</button>
+            <button class="btn-demo btn-primary btn-md">Medium</button>
+            <button class="btn-demo btn-primary btn-lg">Large</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="code-block">
+<pre><span class="comment">/* Base button */</span>
+<span class="prop">display</span><span class="punct">:</span> <span class="val">inline-flex</span><span class="punct">;</span>
+<span class="prop">align-items</span><span class="punct">:</span> <span class="val">center</span><span class="punct">;</span>
+<span class="prop">justify-content</span><span class="punct">:</span> <span class="val">center</span><span class="punct">;</span>
+<span class="prop">height</span><span class="punct">:</span> <span class="val">44</span><span class="unit">px</span><span class="punct">;</span>
+<span class="prop">padding</span><span class="punct">:</span> <span class="val">0 24</span><span class="unit">px</span><span class="punct">;</span>
+<span class="prop">border-radius</span><span class="punct">:</span> <span class="val">8</span><span class="unit">px</span><span class="punct">;</span>
+<span class="prop">font-weight</span><span class="punct">:</span> <span class="val">600</span><span class="punct">;</span>
+<span class="prop">font-size</span><span class="punct">:</span> <span class="val">15</span><span class="unit">px</span><span class="punct">;</span>
+<span class="prop">transition</span><span class="punct">:</span> <span class="val">all 0.15s ease</span><span class="punct">;</span>
+<span class="prop">cursor</span><span class="punct">:</span> <span class="val">pointer</span><span class="punct">;</span>
+
+<span class="comment">/* Primary variant */</span>
+<span class="prop">background</span><span class="punct">:</span> <span class="fallback">#2563EB</span><span class="punct">;</span>
+<span class="prop">color</span><span class="punct">:</span> <span class="fallback">#fff</span><span class="punct">;</span>
+
+<span class="comment">/* :hover */</span>
+<span class="prop">background</span><span class="punct">:</span> <span class="fallback">#1D4ED8</span><span class="punct">;</span>
+
+<span class="comment">/* :active */</span>
+<span class="prop">background</span><span class="punct">:</span> <span class="fallback">#1E40AF</span><span class="punct">;</span>
+<span class="prop">transform</span><span class="punct">:</span> <span class="val">scale(0.97)</span><span class="punct">;</span></pre>
+    </div>
+  </div>
+
+  <!-- Box B -->
+  <div class="box-section">
+    <div class="section-label">Box B — Compact Flex</div>
+
+    <div class="property-tags">
+      <span class="tag tag-flex"><span class="tag-dot" style="background:#3B82F6"></span>display: flex</span>
+      <span class="tag tag-flex"><span class="tag-dot" style="background:#3B82F6"></span>align-items: flex-start</span>
+      <span class="tag tag-size"><span class="tag-dot" style="background:#D97706"></span>width: 160px</span>
+      <span class="tag tag-size"><span class="tag-dot" style="background:#D97706"></span>min-width: 160px</span>
+      <span class="tag tag-spacing"><span class="tag-dot" style="background:#DC2626"></span>padding: 4px</span>
+      <span class="tag tag-spacing"><span class="tag-dot" style="background:#DC2626"></span>gap: 0</span>
+    </div>
+
+    <div class="dim-wrapper">
+      <div class="width-marker width-marker-2">
+        <div class="width-line"></div>
+        <span class="width-label">160px</span>
+        <div class="width-line"></div>
+      </div>
+      <div class="stage" style="padding: 48px 64px;">
+        <div class="target-box-b">
+          <div class="padding-viz">
+            <span class="padding-label">padding: 4px</span>
+            <div class="placeholder-sm box-b-lines">
+              <div class="placeholder-line"></div>
+              <div class="placeholder-line"></div>
+              <div class="placeholder-line"></div>
+              <div class="placeholder-line"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="code-block">
+<pre><span class="prop">display</span><span class="punct">:</span> <span class="val">flex</span><span class="punct">;</span>
+<span class="prop">width</span><span class="punct">:</span> <span class="val">160</span><span class="unit">px</span><span class="punct">;</span>
+<span class="prop">min-width</span><span class="punct">:</span> <span class="val">160</span><span class="unit">px</span><span class="punct">;</span>
+<span class="prop">padding</span><span class="punct">:</span> var(<span class="var-name">--Spacing_4</span>, <span class="fallback">4px</span>)<span class="punct">;</span>
+<span class="prop">align-items</span><span class="punct">:</span> <span class="val">flex-start</span><span class="punct">;</span>
+<span class="prop">gap</span><span class="punct">:</span> var(<span class="var-name">--Spacing_0</span>, <span class="fallback">0</span>)<span class="punct">;</span></pre>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

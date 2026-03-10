@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Type Scale — Font Library</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0e0e10;
+      --surface: #17171a;
+      --border: #2a2a2f;
+      --accent: #f5c842;
+      --accent-dim: rgba(245, 200, 66, 0.08);
+      --text-primary: #f0f0f2;
+      --text-secondary: #7c7c8a;
+      --text-muted: #4a4a56;
+      --tag-bg: #222228;
+      --tag-text: #9b9bac;
+
+      --base: 16px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { font-size: var(--base); scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text-primary);
+      font-family: 'Pretendard', -apple-system, sans-serif;
+      font-weight: 400;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ── Layout ── */
+    .layout {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      min-height: 100vh;
+    }
+
+    /* ── Sidebar ── */
+    aside {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+      border-right: 1px solid var(--border);
+      padding: 40px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .sidebar-logo {
+      padding: 0 24px 32px;
+      font-size: 0.6875rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .sidebar-logo span {
+      color: var(--accent);
+    }
+
+    .sidebar-group-label {
+      padding: 6px 24px 4px;
+      font-size: 0.625rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .sidebar-link {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 24px;
+      font-size: 0.8125rem;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 0.15s, background 0.15s;
+      border-left: 2px solid transparent;
+    }
+
+    .sidebar-link:hover { color: var(--text-primary); background: var(--surface); }
+    .sidebar-link.active {
+      color: var(--accent);
+      border-left-color: var(--accent);
+      background: var(--accent-dim);
+    }
+
+    .sidebar-dot {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: currentColor;
+      opacity: 0.5;
+      flex-shrink: 0;
+    }
+
+    /* ── Main ── */
+    main {
+      padding: 64px 72px;
+      max-width: 1100px;
+    }
+
+    /* ── Page header ── */
+    .page-header {
+      margin-bottom: 72px;
+    }
+
+    .page-eyebrow {
+      font-size: 0.6875rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 16px;
+    }
+
+    .page-title {
+      font-size: 3rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1;
+      color: var(--text-primary);
+      margin-bottom: 20px;
+    }
+
+    .page-desc {
+      font-size: 0.9375rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      max-width: 560px;
+    }
+
+    .page-desc li { margin-left: 1.2em; margin-bottom: 4px; }
+
+    /* ── Weight toggle ── */
+    .weight-toggle {
+      display: flex;
+      gap: 6px;
+      margin-top: 32px;
+    }
+
+    .wt-btn {
+      padding: 6px 14px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-secondary);
+      font-family: inherit;
+      font-size: 0.8125rem;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .wt-btn:hover { border-color: var(--text-muted); color: var(--text-primary); }
+    .wt-btn.active { background: var(--accent); border-color: var(--accent); color: #0e0e10; font-weight: 600; }
+
+    /* ── Section ── */
+    .section {
+      margin-bottom: 80px;
+      scroll-margin-top: 40px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
+    .section-name {
+      font-size: 0.6875rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .section-desc {
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+      margin-bottom: 28px;
+      padding-left: 2px;
+    }
+
+    /* ── Type row ── */
+    .type-row {
+      display: grid;
+      grid-template-columns: 100px 1fr auto;
+      align-items: start;
+      gap: 24px;
+      padding: 28px 0;
+      border-top: 1px solid var(--border);
+      transition: background 0.15s;
+    }
+
+    .type-row:last-child { border-bottom: 1px solid var(--border); }
+    .type-row:hover { background: var(--surface); margin: 0 -16px; padding-left: 16px; padding-right: 16px; border-radius: 8px; border-top-color: transparent; }
+
+    .type-meta {
+      padding-top: 4px;
+    }
+
+    .type-style-tag {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 4px;
+      background: var(--tag-bg);
+      color: var(--tag-text);
+      font-size: 0.6875rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      margin-bottom: 8px;
+    }
+
+    .type-props {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .type-prop {
+      font-size: 0.6875rem;
+      color: var(--text-muted);
+    }
+
+    .type-prop b {
+      color: var(--text-secondary);
+      font-weight: 400;
+    }
+
+    .type-preview {
+      flex: 1;
+      word-break: keep-all;
+    }
+
+    .type-tokens {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      align-items: flex-end;
+      padding-top: 4px;
+      min-width: 100px;
+    }
+
+    .token {
+      font-size: 0.6875rem;
+      color: var(--text-muted);
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      text-align: right;
+    }
+
+    /* ── Divider ── */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 0 0 80px;
+    }
+
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+    /* ── Responsive ── */
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: 1fr; }
+      aside { display: none; }
+      main { padding: 40px 24px; }
+      .type-row { grid-template-columns: 80px 1fr; }
+      .type-tokens { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- Sidebar -->
+  <aside>
+    <div class="sidebar-logo">Font <span>Library</span></div>
+    <div class="sidebar-group-label">Type Categories</div>
+    <a href="#display"       class="sidebar-link active"><span class="sidebar-dot"></span>Display</a>
+    <a href="#heading"       class="sidebar-link"><span class="sidebar-dot"></span>Heading</a>
+    <a href="#title"         class="sidebar-link"><span class="sidebar-dot"></span>Title</a>
+    <a href="#body-normal"   class="sidebar-link"><span class="sidebar-dot"></span>Body / Normal</a>
+    <a href="#body-reading"  class="sidebar-link"><span class="sidebar-dot"></span>Body / Reading</a>
+    <a href="#label"         class="sidebar-link"><span class="sidebar-dot"></span>Label</a>
+  </aside>
+
+  <!-- Main content -->
+  <main>
+
+    <!-- Page header -->
+    <header class="page-header">
+      <p class="page-eyebrow">Design System</p>
+      <h1 class="page-title">Type Scale</h1>
+      <div class="page-desc">
+        <ul>
+          <li>다양한 크기의 텍스트를 사용할 수 있도록 스타일에 따라 구분하여 정의한다.</li>
+          <li>반응형에 대응하기 위하여 폰트 구현을 개발 시 코드상에서는 rem 값을 사용한다.</li>
+        </ul>
+      </div>
+      <div class="weight-toggle">
+        <button class="wt-btn active" data-weight="400">Regular 400</button>
+        <button class="wt-btn" data-weight="500">Medium 500</button>
+        <button class="wt-btn" data-weight="600">SemiBold 600</button>
+        <button class="wt-btn" data-weight="700">Bold 700</button>
+      </div>
+    </header>
+
+    <!-- ── Display ── -->
+    <section class="section" id="display">
+      <div class="section-header">
+        <span class="section-name">Display</span>
+      </div>
+      <p class="section-desc">화면에서 텍스트를 가장 주요하게 나타낼 때 사용한다.</p>
+
+      <div class="type-row">
+        <div class="type-meta">
+          <span class="type-style-tag">XLarge</span>
+          <div class="type-props">
+            <span class="type-prop"><b>80px</b></span>
+            <span class="type-prop">lh 120</span>
+          </div>
+        </div>
+        <div class="type-preview" style="font-size:80px;line-height:120px;letter-spacing:-0.03em;">Aa</div>
+        <div class="type-tokens">
+          <span class="token">80px / 5rem</span>
+          <span class="token">lh 120</span>
+          <span class="token">ls -3%</span>
+        </div>
+      </div>
+
+      <div class="type-row">
+        <div class="type-meta">
+          <span class="type-style-tag">Large</span>
+          <div class="type-props">
+            <span class="type-prop"><b>72px</b></span>
+            <span class="type-prop">lh 100</span>
+          </div>
+        </div>
+        <div class="type-preview" style="font-size:72px;line-height:100px;letter-spacing:-0.028em;">Aa</div>
+        <div class="type-tokens">
+          <span class="token">72px / 4.5rem</span>
+          <span class="token">lh 100</span>
+          <span class="token">ls -2.8%</span>
+        </div>
+      </div>
+
+      <div class="type-row">
+        <div class="type-meta">
+          <span class="type-style-tag">Medium</span>
+          <div class="type-props">
+            <span class="type-prop"><b>64px</b></span>
+            <span class="type-prop">lh 96</span>
+          </div>
+        </div>
+        <div class="type-preview" style="font-size:64px;line-height:96px;letter-spacing:-0.026em;">Aa</div>
+        <div class="type-tokens">
+          <span class="token">64px / 4rem</span>
+          <span class="token">lh 96</span>
+          <span class="token">ls -2.6%</span>
+        </div>
+      </div>
+
+      <div class="type-row">
+        <div class="type-meta">
+          <span class="type-style-tag">Small</span>
+          <div class="type-props">
+            <span class="type-prop"><b>56px</b></span>
+            <span class="type-prop">lh 84</span>
+          </div>
+        </div>
+        <div class="type-preview" style="font-size:56px;line-height:84px;letter-spacing:-0.024em;">Aa</div>
+        <div class="type-tokens">
+          <span class="token">56px / 3.5rem</span>
+          <span class="token">lh 84</span>
+          <span class="token">ls -2.4%</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Heading ── -->
+    <section class="section" id="heading">
+      <div class="section-header">
+        <span class="section-name">Heading</span>
+      </div>
+      <p class="section-desc">페이지 단위 타이틀에 사용한다.</p>
+
+      <div class="type-row">
+        <div class="type-meta">
+          <span class="type-style-tag">XLarge</span>
+          <div class="type-props"><span class="type-prop"><b>48px</b></span><span class="type-prop">lh 72</span></div>
+        </div>
+        <div class="type-preview" style="font-size:48px;line-height:72px;letter-spacing:-0.024em;">The quick brown fox</div>
+        <div class="type-tokens">
+          <span class="token">48px / 3rem</span><span class="token">lh 72</span><span class="token">ls -2.4%</span>
+        </div>
+      </div>
+
+      <div class="type-row">
+        <div class="type-meta">
+          <span class="type-style-tag">Large</span>
+          <div class="type-props"><span class="type-prop"><b>44px</b></span><span class="type-prop">lh 66</span></div>
+        </div>
+        <div class="type-preview" style="font-size:44px;line-height:66px;letter-spacing:-0.024em;">The quick brown fox</div>
+        <div class="type-tokens">
+          <span class="token">44px / 2.75rem</span><span class="token">lh 66</span><span class="token">ls -2.4%</span>
+        </div>
+      </div>
+
+      <div class="type-row">
+        <div class="type-meta">
+          <span class="type-style-tag">Medium</span>
+          <div class="type-props"><span class="type-prop"><b>40px</b></span><span class="type-prop">lh 60</span></div>
+        </div>
+        <div class="type-preview" style="font-size:40px;line-height:60px;letter-spacing:-0.022em;">The quick brown fox</div>
+        <div class="type-tokens">
+          <span class="token">40px / 2.5rem</span><span class="token">lh 60</span><span class="token">ls -2.2%</span>
+        </div>
+      </div>
+
+      <div class="type-row">
+        <div class="type-meta">
+          <span class="type-style-tag">Small</span>
+          <div class="type-props"><span class="type-prop"><b>32px</b></span><span class="type-prop">lh 48</span></div>
+        </div>
+        <div class="type-preview" style="font-size:32px;line-height:48px;letter-spacing:-0.022em;">The quick brown fox</div>
+        <div class="type-tokens">
+          <span class="token">32px / 2rem</span><span class="token">lh 48</span><span class="token">ls -2.2%</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Title ── -->
+    <section class="section" id="title">
+      <div class="section-header">
+        <span class="section-name">Title</span>
+      </div>
+      <p class="section-desc">탭플릿 단위, 모듈 단위의 역할 및 기능을 강조해야 할 때 사용한다.</p>
+
+      <div class="type-row">
+        <div class="type-meta">
+          <span class="type-style-tag">XLarge</span>
+          <div class="type-props"><span class="type-prop"><b>32px</b></span><span class="type-prop">lh 48</span></div>
+        </div>
+        <div class="type-preview" style="font-size:32px;line-height:48px;letter-spacing:-0.022em;">텍스트 스타일 가이드</div>
+        <div class="type-tokens">
+          <span class="token">32px / 2rem</span><span class="token">lh 48</span><span class="token">ls -2.2%</span>
+        </div>
+      </div>
+
+      <div class="type-row">
+        <div class="type-meta">
+          <span class="type-style-tag">Large</span>
+          <div class="type-props"><span class="type-prop"><b>28px</b></span><span class="type-prop">lh 42</span></div>
+        </div>
+        <div class="type-preview" style="font-size:28px;line-height:42px;letter-spacing:-0.02em;">텍스트 스타일 가이드</div>
+        <div class="type-tokens">
+          <span class="token">28px / 1.75rem</span><span class="token">lh 42</span><span class="token">ls -2%</span>
+        </div>
+      </div>
+
+      <div class="type-row">
+        <div class="type-meta">
+          <span class="type-style-tag">Medium</span>
+          <div class="type-props"><span class="type-prop"><b>24px</b></span><span class="type-prop">lh 36</span></div>
+        </div>
+        <div class="type-preview" style="font-size:24px;line-height:36px;letter-spacing:-0.018em;">텍스트 스타일 가이드</div>
+        <div class="type-tokens">
+          <span class="token">24px / 1.5rem</span><span class="token">lh 36</span><span class="token">ls -1.8%</span>
+        </div>
+      </div>
+
+      <div class="type-row">
+        <div class="type-meta">
+          <span class="type-style-tag">Small</span>
+          <div class="type-props"><span class="type-prop"><b>20px</b></span><span class="type-prop">lh 30</span></div>
+        </div>
+        <div class="type-preview" style="font-size:20px;line-height:30px;letter-spacing:-0.016em;">텍스트 스타일 가이드</div>
+        <div class="type-tokens">
+          <span class="token">20px / 1.25rem</span><span class="token">lh 30</span><span class="token">ls -1.6%</span>
+        </div>
+      </div>
+
+      <div class="type-row">
+        <div class="type-meta">
+          <span class="type-style-tag">Xsmall</span>
+          <div class="type-props"><span class="type-prop"><b>18px</b></span><span class="type-prop">lh 28</span></div>
+        </div>
+        <div class="type-preview" style="font-size:18px;line-height:28px;letter-spacing:-0.014em;">텍스트 스타일 가이드</div>
+        <div class="type-tokens">
+          <span class="token">18px / 1.125rem</span><span class="token">lh 28</span><span class="token">ls -1.4%</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Body / Normal ── -->
+    <section class="section" id="body-normal">
+      <div class="section-header">
+        <span class="section-name">Body / Normal</span>
+      </div>
+      <p class="section-desc">본문 텍스트로 사용한다.</p>
+
+      <div class="type-row">
+        <div class="type-meta">
+          <span class="type-style-tag">Large</span>
+          <div class="type-props"><span class="type-prop"><b>16px</b></span><span class="type-prop">lh 24</span></div>
+        </div>
+        <div class="type-preview" style="font-size:16px;line-height:24px;letter-spacing:-0.02em;">
+          디자인 시스템은 제품의 일관성을 유지하고 개발 효율을 높이기 위한 규칙의 집합이다.<br>
+          각 텍스트 스타일은 명확한 목적을 가지고 정의되어야 하며, 상황에 맞게 적용되어야 한다.
+        </div>
+        <div class="type-tokens">
+          <span class="token">16px / 1rem</span><span class="token">lh 24</span><span class="token">ls -2%</span>
+        </div>
+      </div>
+
+      <div class="type-row">
+        <div class="type-meta">
+          <span class="type-style-tag">Medium</span>
+          <div class="type-props"><span class="type-prop"><b>15px</b></span><span class="type-prop">lh 22</span></div>
+        </div>
+        <div class="type-preview" style="font-size:15px;line-height:22px;letter-spacing:-0.016em;">
+          디자인 시스템은 제품의 일관성을 유지하고 개발 효율을 높이기 위한 규칙의 집합이다.<br>
+          각 텍스트 스타일은 명확한 목적을 가지고 정의되어야 하며, 상황에 맞게 적용되어야 한다.
+        </div>
+        <div class="type-tokens">
+          <span class="token">15px / 0.9375rem</span><span class="token">lh 22</span><span class="token">ls -1.6%</span>
+        </div>
+      </div>
+
+      <div class="type-row">
+        <div class="type-meta">
+          <span class="type-style-tag">Small</span>
+          <div class="type-props"><span class="type-prop"><b>14px</b></span><span class="type-prop">lh 20</span></div>
+        </div>
+        <div class="type-preview" style="font-size:14px;line-height:20px;letter-spacing:-0.014em;">
+          디자인 시스템은 제품의 일관성을 유지하고 개발 효율을 높이기 위한 규칙의 집합이다.<br>
+          각 텍스트 스타일은 명확한 목적을 가지고 정의되어야 하며, 상황에 맞게 적용되어야 한다.
+        </div>
+        <div class="type-tokens">
+          <span class="token">14px / 0.875rem</span><span class="token">lh 20</span><span class="token">ls -1.4%</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Body / Reading ── -->
+    <section class="section" id="body-reading">
+      <div class="section-header">
+        <span class="section-name">Body / Reading</span>
+      </div>
+      <p class="section-desc">본문 텍스트를 1.2줄 보다 깊게 읽어야 할 때 사용한다.</p>
+
+      <div class="type-row">
+        <div class="type-meta">
+          <span class="type-style-tag">Large</span>
+          <div class="type-props"><span class="type-prop"><b>16px</b></span><span class="type-prop">lh 26</span></div>
+        </div>
+        <div class="type-preview" style="font-size:16px;line-height:26px;letter-spacing:-0.02em;">
+          디자인 시스템은 제품의 일관성을 유지하고 개발 효율을 높이기 위한 규칙의 집합이다.
+          각 텍스트 스타일은 명확한 목적을 가지고 정의되어야 하며, 상황에 맞게 적용되어야 한다.
+          타이포그래피는 가독성과 시각적 위계를 동시에 고려하여 설계되어야 한다.
+        </div>
+        <div class="type-tokens">
+          <span class="token">16px / 1rem</span><span class="token">lh 26</span><span class="token">ls -2%</span>
+        </div>
+      </div>
+
+      <div class="type-row">
+        <div class="type-meta">
+          <span class="type-style-tag">Medium</span>
+          <div class="type-props"><span class="type-prop"><b>15px</b></span><span class="type-prop">lh 24</span></div>
+        </div>
+        <div class="type-preview" style="font-size:15px;line-height:24px;letter-spacing:-0.016em;">
+          디자인 시스템은 제품의 일관성을 유지하고 개발 효율을 높이기 위한 규칙의 집합이다.
+          각 텍스트 스타일은 명확한 목적을 가지고 정의되어야 하며, 상황에 맞게 적용되어야 한다.
+          타이포그래피는 가독성과 시각적 위계를 동시에 고려하여 설계되어야 한다.
+        </div>
+        <div class="type-tokens">
+          <span class="token">15px / 0.9375rem</span><span class="token">lh 24</span><span class="token">ls -1.6%</span>
+        </div>
+      </div>
+
+      <div class="type-row">
+        <div class="type-meta">
+          <span class="type-style-tag">Small</span>
+          <div class="type-props"><span class="type-prop"><b>14px</b></span><span class="type-prop">lh 22</span></div>
+        </div>
+        <div class="type-preview" style="font-size:14px;line-height:22px;letter-spacing:-0.014em;">
+          디자인 시스템은 제품의 일관성을 유지하고 개발 효율을 높이기 위한 규칙의 집합이다.
+          각 텍스트 스타일은 명확한 목적을 가지고 정의되어야 하며, 상황에 맞게 적용되어야 한다.
+          타이포그래피는 가독성과 시각적 위계를 동시에 고려하여 설계되어야 한다.
+        </div>
+        <div class="type-tokens">
+          <span class="token">14px / 0.875rem</span><span class="token">lh 22</span><span class="token">ls -1.4%</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Label ── -->
+    <section class="section" id="label">
+      <div class="section-header">
+        <span class="section-name">Label</span>
+      </div>
+      <p class="section-desc">구성 요소 내부의 텍스트로 사용한다. (예: Button, Label, Badge, Tooltip …)</p>
+
+      <div class="type-row">
+        <div class="type-meta">
+          <span class="type-style-tag">XXLarge</span>
+          <div class="type-props"><span class="type-prop"><b>22px</b></span><span class="type-prop">lh 32</span></div>
+        </div>
+        <div class="type-preview">
+          <span style="display:inline-flex;align-items:center;gap:8px;">
+            <span style="font-size:22px;line-height:32px;letter-spacing:-0.018em;">Label text</span>
+            <span style="font-size:22px;line-height:32px;letter-spacing:-0.018em;background:var(--accent-dim);color:var(--accent);padding:2px 10px;border-radius:4px;">Badge</span>
+          </span>
+        </div>
+        <div class="type-tokens">
+          <span class="token">22px / 1.375rem</span><span class="token">lh 32</span><span class="token">ls -1.8%</span>
+        </div>
+      </div>
+
+      <div class="type-row">
+        <div class="type-meta">
+          <span class="type-style-tag">XLarge</span>
+          <div class="type-props"><span class="type-prop"><b>20px</b></span><span class="type-prop">lh 28</span></div>
+        </div>
+        <div class="type-preview">
+          <span style="display:inline-flex;align-items:center;gap:8px;">
+            <span style="font-size:20px;line-height:28px;letter-spacing:-0.018em;">Label text</span>
+            <span style="font-size:20px;line-height:28px;letter-spacing:-0.018em;background:var(--accent-dim);color:var(--accent);padding:2px 10px;border-radius:4px;">Badge</span>
+          </span>
+        </div>
+        <div class="type-tokens">
+          <span class="token">20px / 1.25rem</span><span class="token">lh 28</span><span class="token">ls -1.8%</span>
+        </div>
+      </div>
+
+      <div class="type-row">
+        <div class="type-meta">
+          <span class="type-style-tag">Large</span>
+          <div class="type-props"><span class="type-prop"><b>18px</b></span><span class="type-prop">lh 26</span></div>
+        </div>
+        <div class="type-preview">
+          <span style="display:inline-flex;align-items:center;gap:8px;">
+            <span style="font-size:18px;line-height:26px;letter-spacing:-0.014em;">Label text</span>
+            <span style="font-size:18px;line-height:26px;letter-spacing:-0.014em;background:var(--accent-dim);color:var(--accent);padding:2px 10px;border-radius:4px;">Badge</span>
+          </span>
+        </div>
+        <div class="type-tokens">
+          <span class="token">18px / 1.125rem</span><span class="token">lh 26</span><span class="token">ls -1.4%</span>
+        </div>
+      </div>
+
+      <div class="type-row">
+        <div class="type-meta">
+          <span class="type-style-tag">Medium</span>
+          <div class="type-props"><span class="type-prop"><b>16px</b></span><span class="type-prop">lh 24</span></div>
+        </div>
+        <div class="type-preview">
+          <span style="display:inline-flex;align-items:center;gap:8px;">
+            <span style="font-size:16px;line-height:24px;letter-spacing:-0.014em;">Label text</span>
+            <span style="font-size:16px;line-height:24px;letter-spacing:-0.014em;background:var(--accent-dim);color:var(--accent);padding:2px 10px;border-radius:4px;">Badge</span>
+          </span>
+        </div>
+        <div class="type-tokens">
+          <span class="token">16px / 1rem</span><span class="token">lh 24</span><span class="token">ls -1.4%</span>
+        </div>
+      </div>
+
+      <div class="type-row">
+        <div class="type-meta">
+          <span class="type-style-tag">Small</span>
+          <div class="type-props"><span class="type-prop"><b>13px</b></span><span class="type-prop">lh 20</span></div>
+        </div>
+        <div class="type-preview">
+          <span style="display:inline-flex;align-items:center;gap:8px;">
+            <span style="font-size:13px;line-height:20px;letter-spacing:-0.012em;">Label text</span>
+            <span style="font-size:13px;line-height:20px;letter-spacing:-0.012em;background:var(--accent-dim);color:var(--accent);padding:2px 8px;border-radius:4px;">Badge</span>
+          </span>
+        </div>
+        <div class="type-tokens">
+          <span class="token">13px / 0.8125rem</span><span class="token">lh 20</span><span class="token">ls -1.2%</span>
+        </div>
+      </div>
+
+      <div class="type-row">
+        <div class="type-meta">
+          <span class="type-style-tag">Xsmall</span>
+          <div class="type-props"><span class="type-prop"><b>12px</b></span><span class="type-prop">lh 20</span></div>
+        </div>
+        <div class="type-preview">
+          <span style="display:inline-flex;align-items:center;gap:8px;">
+            <span style="font-size:12px;line-height:20px;letter-spacing:-0.01em;">Label text</span>
+            <span style="font-size:12px;line-height:20px;letter-spacing:-0.01em;background:var(--accent-dim);color:var(--accent);padding:2px 8px;border-radius:4px;">Badge</span>
+          </span>
+        </div>
+        <div class="type-tokens">
+          <span class="token">12px / 0.75rem</span><span class="token">lh 20</span><span class="token">ls -1%</span>
+        </div>
+      </div>
+
+      <div class="type-row" style="background: rgba(245,200,66,0.04);">
+        <div class="type-meta">
+          <span class="type-style-tag" style="background:rgba(245,200,66,0.15);color:var(--accent);">XXsmall</span>
+          <div class="type-props"><span class="type-prop"><b>10px</b></span><span class="type-prop">lh 20</span></div>
+        </div>
+        <div class="type-preview">
+          <span style="display:inline-flex;align-items:center;gap:8px;">
+            <span style="font-size:10px;line-height:20px;letter-spacing:-0.01em;">Label text</span>
+            <span style="font-size:10px;line-height:20px;letter-spacing:-0.01em;background:var(--accent-dim);color:var(--accent);padding:2px 8px;border-radius:4px;">Badge</span>
+          </span>
+        </div>
+        <div class="type-tokens">
+          <span class="token">10px / 0.625rem</span><span class="token">lh 20</span><span class="token">ls -1%</span>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+  // Weight toggle
+  const btns = document.querySelectorAll('.wt-btn');
+  const previews = document.querySelectorAll('.type-preview, .type-preview *');
+
+  function applyWeight(w) {
+    document.querySelectorAll('.type-preview').forEach(el => {
+      el.style.fontWeight = w;
+    });
+    document.querySelectorAll('.type-preview span').forEach(el => {
+      el.style.fontWeight = w;
+    });
+  }
+
+  btns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      btns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      applyWeight(btn.dataset.weight);
+    });
+  });
+
+  // Sidebar active state on scroll
+  const sections = document.querySelectorAll('.section');
+  const links = document.querySelectorAll('.sidebar-link');
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        links.forEach(l => l.classList.remove('active'));
+        const active = document.querySelector(`.sidebar-link[href="#${entry.target.id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+
+  sections.forEach(s => observer.observe(s));
+</script>
+
+</body>
+</html>
