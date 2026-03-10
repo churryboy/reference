@@ -1792,6 +1792,11 @@
           <div class="result-card__mood-desc" id="js-result-mood-desc">—</div>
         </div>
 
+        <div class="result-card result-card--css" id="js-result-css-card" style="display:none">
+          <div class="result-card__label">Generated CSS</div>
+          <pre class="result-card__css-preview" id="js-result-css-preview"></pre>
+        </div>
+
       </div>
 
       <!-- Error -->
@@ -2123,6 +2128,29 @@
 }
 .palette-swatch:hover { transform: scale(1.18); }
 
+/* CSS Preview Card */
+.result-card--css {
+  flex-direction: column; gap: 6px;
+  background: rgba(10,12,20,0.6);
+  border-color: rgba(80,100,140,0.2);
+  padding: 12px;
+  max-height: 180px;
+  overflow: hidden;
+}
+.result-card__css-preview {
+  font-family: 'JetBrains Mono', 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  line-height: 1.6;
+  color: rgba(140,200,255,0.7);
+  overflow-y: auto;
+  max-height: 140px;
+  white-space: pre-wrap;
+  word-break: break-all;
+  margin: 0;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.1) transparent;
+}
+
 /* Error */
 .analysis-error {
   display: flex; align-items: center; gap: 8px;
@@ -2222,6 +2250,8 @@
   const resultMoodLabel  = document.getElementById('js-result-mood-label');
   const resultMoodDesc   = document.getElementById('js-result-mood-desc');
   const palSwatches      = document.getElementById('js-palette-swatches');
+  const resultCssCard    = document.getElementById('js-result-css-card');
+  const resultCssPreview = document.getElementById('js-result-css-preview');
   const providerPills    = document.querySelectorAll('.provider-pill');
 
   let currentProvider = 'anthropic';
@@ -2663,6 +2693,21 @@ CRITICAL REMINDERS:
       el.style.background = c;
       palSwatches.appendChild(el);
     });
+
+    // Generated CSS preview
+    if (d.customCSS) {
+      // Format for readability: insert newlines after { and ;
+      const formatted = d.customCSS
+        .replace(/\s*\{\s*/g, ' {\n  ')
+        .replace(/;\s*/g, ';\n  ')
+        .replace(/\s*\}\s*/g, '\n}\n')
+        .replace(/\n {2}\}/g, '\n}')
+        .trim();
+      resultCssPreview.textContent = formatted;
+      resultCssCard.style.display = 'block';
+    } else {
+      resultCssCard.style.display = 'none';
+    }
 
     analysisResults.style.display = 'flex';
   }

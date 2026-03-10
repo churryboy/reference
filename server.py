@@ -13,7 +13,9 @@ ROOT = os.path.dirname(os.path.abspath(__file__))
 ENV_FILE = os.path.join(ROOT, '.env')
 
 def load_env():
-    env = {}
+    # Start with real environment variables (works on Render, Railway, etc.)
+    env = {k: v for k, v in os.environ.items()}
+    # Then overlay with .env file values (local dev)
     try:
         with open(ENV_FILE) as f:
             for line in f:
@@ -30,7 +32,16 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         super().__init__(*args, directory=ROOT, **kwargs)
 
     def do_GET(self):
-        if urlparse(self.path).path == '/api/env':
+        path = urlparse(self.path).path
+
+        # Root → redirect to main page
+        if path == '/' or path == '':
+            self.send_response(302)
+            self.send_header('Location', '/weaverly-hero-production.html')
+            self.end_headers()
+            return
+
+        if path == '/api/env':
             env = load_env()
             payload = {
                 'anthropicKey': env.get('ANTHROPIC_API_KEY', ''),
@@ -52,7 +63,8 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             super().log_message(fmt, *args)
 
 if __name__ == '__main__':
-    port = int(sys.argv[1]) if len(sys.argv) > 1 else 8765
+    # Render/Railway pass port via $PORT env var; fallback to arg or 8765 for local dev
+    port = int(os.environ.get('PORT', sys.argv[1] if len(sys.argv) > 1 else 8765))
     os.chdir(ROOT)
     with http.server.ThreadingHTTPServer(('', port), Handler) as httpd:
         print(f'  Weaverly dev server → http://localhost:{port}')
